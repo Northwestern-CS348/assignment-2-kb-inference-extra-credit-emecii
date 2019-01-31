@@ -129,6 +129,67 @@ class KnowledgeBase(object):
         ####################################################
         # Implementation goes here
         # Not required for the extra credit assignment
+    def str_builder(self, fact_or_rule, indent):
+
+        if isinstance(fact_or_rule, Fact):
+            if fact_or_rule not in self.facts:
+                if indent == "":
+                    return "Fact is not in the KB"
+                else:
+                    return False
+            else:
+                f = self._get_fact(fact_or_rule)
+                out_str = indent
+                out_str += f.name + ": "
+                out_str += str(f.statement)
+                if f.asserted:
+                    out_str += " ASSERTED"
+                out_str += "\n"
+                if f.supported_by:
+                    for sp in f.supported_by:
+                        out_str += indent + "  "
+                        out_str += "SUPPORTED BY"
+                        out_str += "\n"
+                        for forr in sp:
+                            strr = self.str_builder(forr, indent + "    ")
+                            if strr:
+                                out_str += strr
+                return out_str
+
+        elif isinstance(fact_or_rule, Rule):
+            if fact_or_rule not in self.rules:
+                if indent == "":
+                    return "Rule is not in the KB"
+                else:
+                    return False
+            else:
+                r = self._get_rule(fact_or_rule)
+                out_str = indent
+                out_str += r.name + ": "
+                out_str += "("
+                for statement in range(0, len(r.lhs)):
+                    out_str += str(r.lhs[statement])
+                    if statement != len(r.lhs) - 1:
+                        out_str += ", "
+                out_str += ")"
+                out_str += " -> "
+                out_str += str(r.rhs)
+                if r.asserted:
+                    out_str += " ASSERTED"
+                out_str += "\n"
+                if r.supported_by:
+                    out_str += indent + "  "
+                    out_str += "SUPPORTED BY"
+                    out_str += "\n"
+                    for sp in r.supported_by:
+                        for forr in sp:
+                            strr = self.str_builder(forr, indent + "    ")
+                            if strr:
+                                out_str += strr
+                return out_str
+
+        else:
+            return False
 
     def kb_explain(self, fact_or_rule):
         """
@@ -142,7 +203,9 @@ class KnowledgeBase(object):
         """
         ####################################################
         # Student code goes here
-
+        str = self.str_builder(fact_or_rule, "")
+        print (str)
+        return str
 
 class InferenceEngine(object):
     def fc_infer(self, fact, rule, kb):
