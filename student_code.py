@@ -182,8 +182,8 @@ class KnowledgeBase(object):
                     out_str += "SUPPORTED BY"
                     out_str += "\n"
                     for sp in r.supported_by:
-                        for forr in sp:
-                            strr = self.str_builder(forr, indent + "    ")
+                        for item in sp:
+                            strr = self.str_builder(item, indent + "    ")
                             if strr:
                                 out_str += strr
                 return out_str
